@@ -10,7 +10,7 @@ import msgpack
 from .util import random_color
 from .util import tinyid
 from .util import solid16x16gif_datauri
-
+from flask import session
 from requestbin import config
 
 class Bin(object):
@@ -20,7 +20,7 @@ class Bin(object):
         self.created = time.time()
         self.private = private
         self.color = random_color()
-        self.name = tinyid(8)
+        self.name = session['name']
         self.favicon_uri = solid16x16gif_datauri(*self.color)
         self.requests = []
         self.secret_key = os.urandom(24) if self.private else None
@@ -57,6 +57,7 @@ class Bin(object):
         if len(self.requests) > self.max_requests:
             for _ in xrange(self.max_requests, len(self.requests)):
                 self.requests.pop(self.max_requests)
+                
 
 
 class Request(object):
